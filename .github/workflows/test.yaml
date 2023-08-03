@@ -1,5 +1,5 @@
 name: Test
-run-name: ${{ github.actor }} is running ${{ github.workflow }} on ${{ github.event_name }}
+run-name: ${{ github.actor }} is running ${{ github.workflow }} on ${{ github.ref_type }} ${{ github.ref }}
 
 on:
   push:
@@ -27,6 +27,7 @@ jobs:
         run: deno fmt --check
 
       - name: Run linter
+        if: ${{ always() }}
         run: deno lint
 
       - name: Run tests
