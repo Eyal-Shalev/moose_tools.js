@@ -75,7 +75,7 @@ jobs:
 
       - name: validate setup
         env:
-          NODE_AUTH_TOKEN: ${{ github.token }}
+          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           npm whoami
 
