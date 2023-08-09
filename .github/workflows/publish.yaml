@@ -78,6 +78,7 @@ jobs:
           node-version: latest
           registry-url: ${{ matrix.registry_url }}
           scope: ${{ matrix.scope }}
+          always-auth: true
 
       - name: Compile
         run: ./scripts/compile.ts ${{ steps.validate_version.outputs.version }}
