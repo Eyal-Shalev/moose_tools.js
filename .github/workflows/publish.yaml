@@ -70,7 +70,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "latest"
+          node-version: "lts"
           always-auth: true
           token: ${{ matrix.npm_token }}
 
@@ -78,6 +78,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
+          cat /home/runner/.npmrc || true
           npm login --registry "${{ matrix.registry_url }}" --scope "${{ matrix.scope }}" --always-auth
           npm whoami
 
