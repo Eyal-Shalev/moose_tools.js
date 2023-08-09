@@ -61,7 +61,6 @@ jobs:
         run: |
           echo "NPM_CONFIG_REGISTRY=${{ matrix.registry-url }}" >> "$GITHUB_ENV"
           echo "NPM_CONFIG_SCOPE=${{ matrix.scope }}" >> "$GITHUB_ENV"
-          echo "NODE_AUTH_TOKEN=${{ secrets[matrix.npm_token_secret] }}" >> "$GITHUB_ENV"
 
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -72,6 +71,7 @@ jobs:
           node-version: "lts/*"
           registry-url: ${{ matrix.registry-url }}
           scope: ${{ matrix.scope }}
+          token: ${{ secrets[matrix.npm_token_secret] }}
 
       - name: validate setup
         run: |
