@@ -70,7 +70,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "lts"
+          node-version: "lts/*"
           always-auth: true
           token: ${{ matrix.npm_token }}
 
