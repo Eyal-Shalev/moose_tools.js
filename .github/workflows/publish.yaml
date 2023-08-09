@@ -11,10 +11,6 @@ on:
         description: "Version to publish"
         required: true
 
-permissions:
-  contents: read
-  packages: write
-
 defaults:
   run:
     shell: bash
@@ -46,21 +42,26 @@ jobs:
     name: Compile and Publish
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v3
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: "lts/*"
-          always-auth: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: 'https://npm.pkg.github.com'
 
       - name: validate setup
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cat ~/.npmrc || true
+          cat .npmrc || true
           cat /home/runner/.npmrc || true
           npm whoami
 
