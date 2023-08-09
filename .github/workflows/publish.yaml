@@ -61,7 +61,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Compile
-        run: ./scripts/compile.ts "${{ steps.validate_version.outputs.version }}"
+        run: ./scripts/compile.ts "${{ needs.validate_version.outputs.version }}"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -104,4 +104,4 @@ jobs:
         working-directory: "./dist"
         env:
           NODE_AUTH_TOKEN: ${{ secrets[matrix.npm_token_secret] }}
-        run: npm publish --access public --registry ${{ matrix.registry-url }}
+        run: npm publish --access public --registry "${{ matrix.registry-url }}"
