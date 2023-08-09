@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.semver.outputs.version }}
+      npm_tag: ${{ steps.npm_tag.outputs.npm_tag }}
     steps:
       - name: Get Raw Version
         id: raw_version
@@ -41,6 +42,14 @@ jobs:
         uses: matt-usurp/validate-semver@v1
         with:
           version: ${{ steps.raw_version.outputs.raw_version }}
+
+      - id: npm_tag
+        run: |
+          if [ "${{ steps.semver.outputs.extra }}" == "" ]; then
+            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "npm_tag=dev" >> "$GITHUB_OUTPUT"
+          fi
 
   compile_and_publish:
     name: Compile and Publish
@@ -83,4 +92,8 @@ jobs:
         working-directory: "./dist"
         env:
           NODE_AUTH_TOKEN: ${{ secrets[matrix.npm_token_secret] }}
-        run: npm publish --access public --registry "${{ matrix.registry-url }}"
+        run: |
+          npm publish \
+            --access public \
+            --registry "${{ matrix.registry-url }}" \
+            --tag "${{ needs.validate_version.outputs.npm_tag }}"
