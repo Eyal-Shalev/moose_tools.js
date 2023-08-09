@@ -75,7 +75,6 @@ jobs:
 
       - name: validate setup
         run: |
-          cat "$NPM_CONFIG_USERCONFIG"
           npm whoami
 
       - name: Setup Deno
