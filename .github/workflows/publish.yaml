@@ -79,7 +79,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           cat /home/runner/.npmrc || true
-          npm login --registry "${{ matrix.registry_url }}" --scope "${{ matrix.scope }}" --always-auth
+          npm login --registry "${{ matrix.registry_url }}" --scope "${{ matrix.scope }}" --always-auth --verbose
           npm whoami
 
       - name: Print NPM errors
