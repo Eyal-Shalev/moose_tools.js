@@ -61,6 +61,8 @@ jobs:
         run: cat "$NPM_CONFIG_USERCONFIG"
 
       - name: validate setup
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
           npm whoami --registry https://npm.pkg.github.com
 
