@@ -67,25 +67,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Who Am I
+        run: npm whoami
+
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-          registry-url: ${{ matrix.registry_url }}
-          scope: ${{ matrix.scope }}
-          always-auth: true
-
-      - name: Who Am I
-        run: npm whoami
-
-      - name: Who Am I
-        working-directory: "./dist"
-        run: npm whoami
 
       - name: Compile
         run: ./scripts/compile.ts "${{ steps.validate_version.outputs.version }}"
