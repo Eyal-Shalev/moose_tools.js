@@ -80,13 +80,22 @@ jobs:
           scope: ${{ matrix.scope }}
           always-auth: true
 
+      - name: Who Am I
+        run: npm whoami
+
+      - name: Who Am I
+        working-directory: "./dist"
+        run: npm whoami
+
       - name: Compile
-        run: ./scripts/compile.ts ${{ steps.validate_version.outputs.version }}
+        run: ./scripts/compile.ts "${{ steps.validate_version.outputs.version }}"
+
+      - name: Install Dependencies
+        working-directory: "./dist"
+        run: npm ci
 
       - name: Publish
-        run: |
-          cat ../.npmrc
-          npm publish --access public
         working-directory: "./dist"
         env:
           NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
+        run: npm publish --access public
