@@ -51,7 +51,7 @@ jobs:
         registry: [ "github" ]
         include:
           - registry: "github"
-            npm_token: ${{ github.token }}
+            npm_token: "${{ github.token }}"
             registry-url: "https://npm.pkg.github.com"
             scope: "@${{ github.repository_owner }}"
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: validate setup
         env:
-          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
+          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
           npm whoami
 
