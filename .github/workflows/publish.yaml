@@ -43,7 +43,7 @@ jobs:
           version: ${{ steps.raw_version.outputs.raw_version }}
 
   compile_and_publish:
-    name: Compile
+    name: Compile and Publish
     runs-on: ubuntu-latest
     needs: [ validate_version ]
 
@@ -68,6 +68,9 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          registry-url: ${{ matrix.registry-url }}
+          scope: ${{ matrix.scope }}
 
       - name: Compile
         run: ./scripts/compile.ts --name="${{ matrix.scope }}/moose_tools" --version="${{ needs.validate_version.outputs.version }}"
