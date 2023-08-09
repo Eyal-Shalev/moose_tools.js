@@ -72,10 +72,9 @@ jobs:
         with:
           node-version: "latest"
           always-auth: true
+          token: ${{ matrix.npm_token }}
 
       - name: validate setup
-        env:
-          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           npm whoami
 
