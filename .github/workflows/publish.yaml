@@ -55,13 +55,14 @@ jobs:
         with:
           node-version: "lts/*"
           registry-url: 'https://npm.pkg.github.com'
+          always-auth: true
+
+      - name: Print npmrc
+        run: cat "$NPM_CONFIG_USERCONFIG"
 
       - name: validate setup
-        env:
-          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
-          cat "$NPM_CONFIG_USERCONFIG" || true
-          cd ~ && npm whoami
+          npm whoami --registry https://npm.pkg.github.com
 
       - name: Print NPM errors
         if: failure()
