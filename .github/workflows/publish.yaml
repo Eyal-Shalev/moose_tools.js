@@ -59,10 +59,16 @@ jobs:
 
       - name: Set NPM Config environment variables
         run: |
-          echo "NODE_AUTH_TOKEN=${{ secrets[matrix.npm_token_secret] }}" >> "$GITHUB_ENV"
+          echo "NPM_CONFIG_REGISTRY=${{ matrix.registry-url }}" >> "$GITHUB_ENV"
+          echo "NPM_CONFIG_SCOPE=${{ matrix.scope }}" >> "$GITHUB_ENV"
 
       - name: Checkout Repository
         uses: actions/checkout@v3
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -70,21 +76,6 @@ jobs:
           node-version: "lts/*"
           registry-url: ${{ matrix.registry-url }}
           scope: ${{ matrix.scope }}
-          token: ${{ secrets[matrix.npm_token_secret] }}
-
-      - name: validate setup
-        run: |
-          npm whoami
-
-      - name: Print NPM errors
-        if: failure()
-        run: |
-          cat /home/runner/.npm/_logs/*.log
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
 
       - name: Compile
         run: ./scripts/compile.ts "${{ steps.validate_version.outputs.version }}"
@@ -93,8 +84,8 @@ jobs:
         working-directory: "./dist"
         run: npm ci
 
-#      - name: Publish
-#        working-directory: "./dist"
-#        env:
-#          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
-#        run: npm publish --access public
+      - name: Publish
+        working-directory: "./dist"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets[matrix.npm_token_secret] }}
+        run: npm publish --access public
