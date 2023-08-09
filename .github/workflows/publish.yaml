@@ -69,6 +69,9 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: "latest"
+          always-auth: true
 
       - name: validate setup
         run: |
