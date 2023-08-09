@@ -65,7 +65,6 @@ jobs:
           registry-url: ${{ matrix.registry-url }}
           scope: ${{ matrix.scope }}
           token: ${{ github.token }}
-          always-auth: true
 
       - name: Set NPM Config environment variables
         run: |
