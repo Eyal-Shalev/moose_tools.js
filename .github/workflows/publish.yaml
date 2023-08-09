@@ -84,7 +84,9 @@ jobs:
         run: ./scripts/compile.ts ${{ steps.validate_version.outputs.version }}
 
       - name: Publish
-        run: npm publish --access public
+        run: |
+          cat ../.npmrc
+          npm publish --access public
         working-directory: "./dist"
         env:
           NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
