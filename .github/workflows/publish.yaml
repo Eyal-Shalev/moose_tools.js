@@ -62,7 +62,7 @@ jobs:
         run: |
           cat ~/.npmrc || true
           cat .npmrc || true
-          cat /home/runner/.npmrc || true
+          cat "$NPM_CONFIG_USERCONFIG" || true
           npm whoami
 
       - name: Print NPM errors
