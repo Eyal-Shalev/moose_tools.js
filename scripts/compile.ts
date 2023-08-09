@@ -2,18 +2,18 @@
 
 // ex. scripts/build_npm.ts
 import { build, emptyDir } from "https://deno.land/x/dnt@0.38.0/mod.ts";
-import {assert} from "https://deno.land/std@0.197.0/assert/mod.ts";
-import {parse} from "https://deno.land/std@0.197.0/flags/mod.ts";
+import { assert } from "https://deno.land/std@0.197.0/assert/mod.ts";
+import { parse } from "https://deno.land/std@0.197.0/flags/mod.ts";
 import * as semver from "npm:semver@7";
 
 await emptyDir("./dist");
 
-const {name, version} = parse(Deno.args, {
-	string: ['name', 'version'],
+const { name, version } = parse(Deno.args, {
+	string: ["name", "version"],
 	default: {
-		name: 'moose_tools',
-		version: '0.0.0-dev',
-	}
+		name: "moose_tools",
+		version: "0.0.0-dev",
+	},
 });
 
 assert(semver.valid(version), `Invalid version: "${version}"`);
