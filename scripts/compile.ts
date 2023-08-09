@@ -7,6 +7,7 @@ await emptyDir("./dist");
 
 await build({
 	entryPoints: ["./mod.ts"],
+	skipSourceOutput: true,
 	outDir: "./dist",
 	compilerOptions: {
 		target: "ES2022",
