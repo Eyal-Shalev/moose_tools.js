@@ -53,6 +53,7 @@ jobs:
           - registry: "github"
             registry-url: "https://npm.pkg.github.com"
             scope: "@${{ github.repository_owner }}"
+            npm_token: ${{ github.token }}
 
     steps:
       - name: Checkout Repository
@@ -70,10 +71,9 @@ jobs:
         run: |
           echo "NPM_CONFIG_REGISTRY=${{ matrix.registry-url }}" >> "$GITHUB_ENV"
           echo "NPM_CONFIG_SCOPE=${{ matrix.scope }}" >> "$GITHUB_ENV"
+          echo "NODE_AUTH_TOKEN=${{ matrix.npm_token }}" >> "$GITHUB_ENV"
 
       - name: validate setup
-        env:
-          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
           npm whoami
 
