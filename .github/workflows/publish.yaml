@@ -104,4 +104,5 @@ jobs:
         working-directory: "./dist"
         env:
           NODE_AUTH_TOKEN: ${{ secrets[matrix.npm_token_secret] }}
+          NPM_CONFIG_SCOPE: ${{ matrix.scope }}
         run: npm publish --access public --registry "${{ matrix.registry-url }}"
