@@ -61,7 +61,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
           cat "$NPM_CONFIG_USERCONFIG" || true
-          npm whoami
+          cd ~ && npm whoami
 
       - name: Print NPM errors
         if: failure()
