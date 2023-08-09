@@ -74,6 +74,8 @@ jobs:
           always-auth: true
 
       - name: validate setup
+        env:
+          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           npm whoami
 
