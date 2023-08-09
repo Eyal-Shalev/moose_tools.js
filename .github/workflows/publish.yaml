@@ -59,7 +59,7 @@ jobs:
           - registry: "github"
             scope: "@Eyal-Shalev"
             registry_url: "https://npm.pkg.github.com"
-            npm_token: ${{ github.token }}
+            npm_token: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout Repository
