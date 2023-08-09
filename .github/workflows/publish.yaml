@@ -49,12 +49,13 @@ jobs:
     strategy:
       matrix:
         registry:
+#          - npm
           - github
         include:
-          - registry: "npm"
-            scope: "@eyalsh"
-            registry_url: "https://registry.npmjs.org"
-            npm_token: ${{ secrets.NPM_TOKEN }}
+#          - registry: "npm"
+#            scope: "@eyalsh"
+#            registry_url: "https://registry.npmjs.org"
+#            npm_token: ${{ secrets.NPM_TOKEN }}
           - registry: "github"
             scope: "@Eyal-Shalev"
             registry_url: "https://npm.pkg.github.com"
