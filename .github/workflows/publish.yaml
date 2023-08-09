@@ -1,71 +1,71 @@
 name: Publish
 
 on:
-    push:
-        branches: [ "main" ]
-        tags:
-            - "v*"
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version to publish"
-                required: true
+  push:
+    branches: [ "main" ]
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish"
+        required: true
 
 permissions:
-    contents: read
-    packages: write
+  contents: read
+  packages: write
 
 defaults:
-    run:
-        shell: bash
+  run:
+    shell: bash
 
 jobs:
 
-    validate_version:
-        name: Validate version
-        runs-on: ubuntu-latest
-        outputs:
-            version: ${{ steps.semver.outputs.version }}
-        steps:
-            -   name: Get Raw Version
-                id: raw_version
-                run: |
-                    if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-                      echo "raw_version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
-                    elif [ "${{ github.ref_type }}" == "tag" ]; then
-                      echo "raw_version=${{ github.ref }}" >> "$GITHUB_OUTPUT"
-                    elif [ "${{ github.ref_type }}" == "branch" ]; then
-                      echo "raw_version=0.0.0-${{ github.sha }}" >> "$GITHUB_OUTPUT"
-                    fi
-            -   id: semver
-                uses: matt-usurp/validate-semver@v1
-                with:
-                    version: ${{ steps.raw_version.outputs.raw_version }}
+  validate_version:
+    name: Validate version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.semver.outputs.version }}
+    steps:
+      - name: Get Raw Version
+        id: raw_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "raw_version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "raw_version=${{ github.ref }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.ref_type }}" == "branch" ]; then
+            echo "raw_version=0.0.0-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+      - id: semver
+        uses: matt-usurp/validate-semver@v1
+        with:
+          version: ${{ steps.raw_version.outputs.raw_version }}
 
-    compile:
-        name: Compile
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout Repository
-                uses: actions/checkout@v2
-                with:
-                    fetch-depth: 0
+  compile:
+    name: Compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-            -   name: Setup Deno
-                uses: denoland/setup-deno@v1
-                with:
-                    deno-version: v1.x
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
-            -   name: Setup Node
-                uses: actions/setup-node@v3
-                with:
-                    node-version: latest
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
 
-            -   name: Compile
-                run: ./scripts/compile.ts
+      - name: Compile
+        run: ./scripts/compile.ts
 
-            -   name: Upload Artifact
-                uses: actions/upload-artifact@v2
-                with:
-                    name: dist
-                    path: dist
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
