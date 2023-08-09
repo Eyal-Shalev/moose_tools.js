@@ -51,7 +51,6 @@ jobs:
         registry: [ "github" ]
         include:
           - registry: "github"
-            npm_token: "${{ github.token }}"
             registry-url: "https://npm.pkg.github.com"
             scope: "@${{ github.repository_owner }}"
 
@@ -65,7 +64,7 @@ jobs:
           node-version: "lts/*"
           registry-url: ${{ matrix.registry-url }}
           scope: ${{ matrix.scope }}
-          token: ${{ matrix.npm_token }}
+          token: ${{ github.token }}
           always-auth: true
 
       - name: Set NPM Config environment variables
@@ -74,8 +73,6 @@ jobs:
           echo "NPM_CONFIG_SCOPE=${{ matrix.scope }}" >> "$GITHUB_ENV"
 
       - name: validate setup
-        env:
-          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           npm whoami
 
