@@ -72,6 +72,8 @@ jobs:
           echo "NPM_CONFIG_SCOPE=${{ matrix.scope }}" >> "$GITHUB_ENV"
 
       - name: validate setup
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
           npm whoami
 
