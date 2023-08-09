@@ -15,8 +15,12 @@ defaults:
   run:
     shell: bash
 
-jobs:
 
+permissions:
+  contents: read
+  packages: write
+
+jobs:
   validate_version:
     name: Validate version
     runs-on: ubuntu-latest
@@ -42,9 +46,14 @@ jobs:
     name: Compile and Publish
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      packages: write
+    strategy:
+      matrix:
+        registry: [ "github" ]
+        include:
+          - registry: "github"
+            npm_token: ${{ github.token }}
+            registry-url: "https://npm.pkg.github.com"
+            scope: "@${{ github.repository_owner }}"
 
     steps:
       - name: Checkout Repository
@@ -54,17 +63,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "lts/*"
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: ${{ matrix.registry-url }}
+          scope: ${{ matrix.scope }}
+          token: ${{ matrix.npm_token }}
           always-auth: true
 
-      - name: Print npmrc
-        run: cat "$NPM_CONFIG_USERCONFIG"
+      - name: Set NPM Config environment variables
+        run: |
+          echo "npm_config_registry=${{ matrix.registry-url }}" >> "$GITHUB_ENV"
+          echo "npm_config_scope=${{ matrix.scope }}" >> "$GITHUB_ENV"
 
       - name: validate setup
-        env:
-          NODE_AUTH_TOKEN: ${{ github.token }}
         run: |
-          npm whoami --registry https://npm.pkg.github.com
+          npm whoami
 
       - name: Print NPM errors
         if: failure()
