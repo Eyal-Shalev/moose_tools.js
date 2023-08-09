@@ -75,7 +75,10 @@ jobs:
           token: ${{ matrix.npm_token }}
 
       - name: validate setup
+        env:
+          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
+          npm login --registry "${{ matrix.registry_url }}" --scope "${{ matrix.scope }}" --always-auth
           npm whoami
 
       - name: Setup Deno
