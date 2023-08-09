@@ -33,6 +33,7 @@ await build({
 		"engines": {
 			"node": ">=16.11.0",
 		},
+		"keywords": ["utilities"],
 	},
 	postBuild() {
 		// steps to run after building and before running the tests

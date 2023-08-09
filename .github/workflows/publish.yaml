@@ -42,9 +42,24 @@ jobs:
         with:
           version: ${{ steps.raw_version.outputs.raw_version }}
 
-  compile:
-    name: Compile
+  compile_and_publish:
+    name: Compile and Publish
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        registry:
+          - github
+        include:
+          - registry: "npm"
+            scope: "@eyalsh"
+            registry_url: "https://registry.npmjs.org"
+            npm_token: ${{ secrets.NPM_TOKEN }}
+          - registry: "github"
+            scope: "@Eyal-Shalev"
+            registry_url: "https://npm.pkg.github.com"
+            npm_token: ${{ github.token }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -60,12 +75,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: latest
+          registry-url: ${{ matrix.registry_url }}
+          scope: ${{ matrix.scope }}
 
       - name: Compile
-        run: ./scripts/compile.ts
+        run: ./scripts/compile.ts ${{ steps.validate_version.outputs.version }}
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
+      - name: Publish
+        run: npm publish --access public
+        working-directory: "./dist"
+        env:
+          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
