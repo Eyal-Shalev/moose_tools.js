@@ -46,21 +46,6 @@ jobs:
     name: Compile and Publish
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        registry:
-#          - npm
-          - github
-        include:
-#          - registry: "npm"
-#            scope: "@eyalsh"
-#            registry_url: "https://registry.npmjs.org"
-#            npm_token: ${{ secrets.NPM_TOKEN }}
-          - registry: "github"
-            scope: "@Eyal-Shalev"
-            registry_url: "https://npm.pkg.github.com"
-            npm_token: "${{ secrets.GITHUB_TOKEN }}"
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -72,14 +57,11 @@ jobs:
         with:
           node-version: "lts/*"
           always-auth: true
-          token: ${{ matrix.npm_token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: validate setup
-        env:
-          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           cat /home/runner/.npmrc || true
-          npm login --registry "${{ matrix.registry_url }}" --scope "${{ matrix.scope }}" --always-auth --verbose
           npm whoami
 
       - name: Print NPM errors
@@ -99,8 +81,8 @@ jobs:
         working-directory: "./dist"
         run: npm ci
 
-      - name: Publish
-        working-directory: "./dist"
-        env:
-          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
-        run: npm publish --access public
+#      - name: Publish
+#        working-directory: "./dist"
+#        env:
+#          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
+#        run: npm publish --access public
