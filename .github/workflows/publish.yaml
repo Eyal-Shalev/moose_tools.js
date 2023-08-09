@@ -70,8 +70,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
 
-      - name: Who Am I
-        run: npm whoami
+      - name: validate setup
+        run: |
+          cat "$NPM_CONFIG_USERCONFIG"
+          npm whoami
 
       - name: Setup Deno
         uses: denoland/setup-deno@v1
