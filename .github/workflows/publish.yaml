@@ -70,10 +70,12 @@ jobs:
 
       - name: Set NPM Config environment variables
         run: |
-          echo "npm_config_registry=${{ matrix.registry-url }}" >> "$GITHUB_ENV"
-          echo "npm_config_scope=${{ matrix.scope }}" >> "$GITHUB_ENV"
+          echo "NPM_CONFIG_REGISTRY=${{ matrix.registry-url }}" >> "$GITHUB_ENV"
+          echo "NPM_CONFIG_SCOPE=${{ matrix.scope }}" >> "$GITHUB_ENV"
 
       - name: validate setup
+        env:
+          NODE_AUTH_TOKEN: ${{ matrix.npm_token }}
         run: |
           npm whoami
 
