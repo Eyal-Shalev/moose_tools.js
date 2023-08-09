@@ -81,6 +81,11 @@ jobs:
           npm login --registry "${{ matrix.registry_url }}" --scope "${{ matrix.scope }}" --always-auth
           npm whoami
 
+      - name: Print NPM errors
+        if: failure()
+        run: |
+          cat /home/runner/.npm/_logs/*.log
+
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
