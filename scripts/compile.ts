@@ -19,6 +19,7 @@ const { name, version } = parse(Deno.args, {
 assert(semver.valid(version), `Invalid version: "${version}"`);
 
 await build({
+	packageManager: "yarn",
 	entryPoints: ["./mod.ts"],
 	skipSourceOutput: true,
 	outDir: "./dist",
