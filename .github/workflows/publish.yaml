@@ -136,4 +136,4 @@ jobs:
             # Release ${{ needs.validate_version.outputs.version }}
             Changelog TBD
           draft: false
-          prerelease: ${{ steps.semver.outputs.extra != "" }}
+          prerelease: ${{ steps.semver.outputs.extra != '' }}
