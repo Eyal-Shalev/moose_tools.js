@@ -18,3 +18,17 @@ export function range(
 		},
 	};
 }
+
+
+/**
+ * Returns an iterable of numbers from start (inclusive) to end (exclusive) by step.
+ */
+export function repeat<T>(value: T, times = Infinity): TypedIterable<T> {
+	return {
+		*[Symbol.iterator](): Iterator<T, void, never> {
+			for (let i = 0; i < times; i++) {
+				yield value;
+			}
+		},
+	};
+}
