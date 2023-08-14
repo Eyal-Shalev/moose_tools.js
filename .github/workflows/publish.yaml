@@ -55,6 +55,7 @@ jobs:
     name: Release
     needs: [ validate_version ]
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref_type == 'tag' }}
 
     steps:
       - name: Checkout Repository
@@ -69,7 +70,6 @@ jobs:
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: ${{ github.event_name == 'workflow_dispatch' || github.ref_type == 'tag' }}
         with:
           files: |
             moose_tools.js
@@ -114,10 +114,6 @@ jobs:
 
       - name: Compile
         run: ./scripts/compile.ts --name="${{ matrix.scope }}/moose_tools" --version="${{ needs.validate_version.outputs.version }}"
-
-      - name: Install Dependencies
-        working-directory: "./dist"
-        run: npm ci
 
       - name: Publish
         working-directory: "./dist"
