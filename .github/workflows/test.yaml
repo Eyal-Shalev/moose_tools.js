@@ -2,6 +2,7 @@ name: Test
 run-name: ${{ github.actor }} is running ${{ github.workflow }} on ${{ github.ref_type }} ${{ github.ref }}
 
 on:
+  workflow_call:
   push:
     branches: [ "main" ]
   pull_request:
