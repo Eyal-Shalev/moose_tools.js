@@ -1,4 +1,6 @@
-name: Publish
+name: Test and Publish
+
+run-name: ${{ github.actor }} is running ${{ github.workflow }} on ${{ github.ref_type }} ${{ github.ref }}
 
 on:
   push:
@@ -28,11 +30,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - run: ls ./.github/workflows
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
-      - run: cat ./.github/workflows/test.yaml
+      - name: Verify formatting
+        if: ${{ always() }}
+        shell: sh
+        run: deno fmt --check
 
-      - uses: ./.github/workflows/test.yaml
+      - name: Run linter
+        if: ${{ always() }}
+        shell: sh
+        run: deno lint
+
+      - name: Run tests
+        if: ${{ always() }}
+        shell: sh
+        run: deno test -A
 
   validate_version:
     name: Validate version
