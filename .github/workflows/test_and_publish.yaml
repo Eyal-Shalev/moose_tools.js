@@ -138,6 +138,7 @@ jobs:
         run: ./scripts/compile.ts --name="${{ matrix.scope }}/moose_tools" --version="${{ needs.validate_version.outputs.version }}"
 
       - id: npm_tag
+        name: Get NPM Tag
         run: |
           if [ "${{ needs.validate_version.outputs.extra }}" == "" ]; then
             echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
@@ -153,4 +154,4 @@ jobs:
           npm publish \
             --access public \
             --registry "${{ matrix.registry-url }}" \
-            --tag "${{ needs.validate_version.outputs.npm_tag }}"
+            --tag "${{ steps.npm_tag.outputs.npm_tag }}"
