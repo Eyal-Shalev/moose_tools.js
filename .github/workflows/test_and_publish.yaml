@@ -1,6 +1,6 @@
 name: Test and Publish
 
-run-name: ${{ github.actor }} is running ${{ github.workflow }} on ${{ github.ref_type }} ${{ github.ref }}
+run-name: ${{ github.actor }} is running ${{ github.workflow }} on ${{ github.ref_type }} ${{ github.ref_name }}
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.semver.outputs.version }}
-      npm_tag: ${{ steps.npm_tag.outputs.npm_tag }}
+      extra: ${{ steps.semver.outputs.extra }}
     steps:
       - name: Get Raw Version
         id: raw_version
@@ -71,14 +71,6 @@ jobs:
         uses: matt-usurp/validate-semver@v1
         with:
           version: ${{ steps.raw_version.outputs.raw_version }}
-
-      - id: npm_tag
-        run: |
-          if [ "${{ steps.semver.outputs.extra }}" == "" ]; then
-            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
-          else
-            echo "npm_tag=dev" >> "$GITHUB_OUTPUT"
-          fi
 
   release:
     name: Release
@@ -106,11 +98,9 @@ jobs:
             LICENSE
             README.md
           tag_name: ${{ needs.validate_version.outputs.version }}
-          body: |
-            # Release ${{ needs.validate_version.outputs.version }}
-            ${{ steps.semver.outputs.extra }}
           draft: false
-          prerelease: ${{ steps.semver.outputs.extra != '' }}
+          prerelease: ${{ needs.validate_version.outputs.extra != '' }}
+          generate_release_notes: true
 
   compile_and_publish:
     name: Compile and Publish
@@ -146,6 +136,14 @@ jobs:
 
       - name: Compile
         run: ./scripts/compile.ts --name="${{ matrix.scope }}/moose_tools" --version="${{ needs.validate_version.outputs.version }}"
+
+      - id: npm_tag
+        run: |
+          if [ "${{ needs.validate_version.outputs.extra }}" == "" ]; then
+            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "npm_tag=dev" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Publish
         working-directory: "./dist"
