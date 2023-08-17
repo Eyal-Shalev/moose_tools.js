@@ -84,7 +84,6 @@ jobs:
     name: Release
     needs: [ test, validate_version ]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.ref_type == 'tag' }}
     permissions:
       contents: write
 
