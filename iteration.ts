@@ -16,14 +16,20 @@ export type IterableOrIterator<T, TReturn = void, TNext = undefined> =
 	| TypedIterable<T, TReturn, TNext>
 	| Iterator<T, TReturn, TNext>;
 
+
+export function range(): BetterGenerator<number>;
+export function range(stop: number): BetterGenerator<number>;
+export function range(start: number, stop: number): BetterGenerator<number>;
+export function range(start: number, stop: number, step: number): BetterGenerator<number>;
+
 /**
  * Returns an iterable of numbers from start (inclusive) to end (exclusive) by step.
  */
-export function* range(
-	start = 0,
-	end = Infinity,
-	step = 1,
-): BetterGenerator<number> {
+export function* range(...args: [] | [end: number] | [start: number, end: number] | [start: number, end: number, step: number]): BetterGenerator<number> {
+	args = args.length === 0 ? [0, Infinity, 1] : args;
+	args = args.length === 1 ? [0, args[0], 1] : args;
+	args = args.length === 2 ? [...args, 1] : args;
+	const [start, end, step] = args;
 	for (let i = start; i < end; i += step) {
 		yield i;
 	}
